@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Tasks - Centered Layout</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #312009, #000000);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #000000;
+    }
+
+    .section {
+      background: rgba(174, 150, 150, 0.7);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    button {
+      background: #2015f0;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      margin: 6px 6px 0 0;
+      font-size: 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+      box-shadow: 0 4px 10px rgba(108, 99, 255, 0.2);
+    }
+
+    button:hover {
+      background: #574fcf;
+      transform: translateY(-1px);
+    }
+
+    #quiz-options button {
+      background: #05420c;
+    }
+
+    #quiz-options button:hover {
+      background: #093d35;
+    }
+
+    img {
+      max-width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+      margin-top: 10px;
+      margin-bottom: 16px;
+    }
+
+    #quiz-feedback {
+      margin-top: 12px;
+      font-style: italic;
+      color: #000000;
+    }
+
+    #quiz-score {
+      font-weight: bold;
+      color: #000000;
+    }
+
+    #joke-output {
+      margin-top: 14px;
+      font-size: 18px;
+      color: #000000;
+    }
+
+    @media (max-height: 800px) {
+      body {
+        align-items: flex-start;
+        padding-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="section">
+      <h2>1. Image Carousel</h2>
+      <img id="carousel-img" src="https://picsum.photos/id/101/400/200" alt="Carousel Image">
+      <br>
+      <button onclick="prevImage()">⏮ Prev</button>
+      <button onclick="nextImage()">⏭ Next</button>
+    </div>
+
+    <div class="section">
+      <h2>2. Interactive Quiz</h2>
+      <p id="quiz-question">Click "Start Quiz" to begin.</p>
+      <div id="quiz-options"></div>
+      <p id="quiz-feedback"></p>
+      <p id="quiz-score"></p>
+      <button onclick="startQuiz()">▶️ Start</button>
+      <button onclick="stopQuiz()">⏹ Stop</button>
+      <button onclick="restartQuiz()">🔁 Restart</button>
+    </div>
+
+    <div class="section">
+      <h2>3. Joke API</h2>
+      <button onclick="getJoke()">🤣 Get Joke</button>
+      <p id="joke-output"></p>
+    </div>
+  </div>
+
+  <script>
+    const images = [
+      "https://picsum.photos/id/101/400/200",
+      "https://picsum.photos/id/102/400/200",
+      "https://picsum.photos/id/103/400/200",
+      "https://picsum.photos/id/104/400/200",
+      "https://picsum.photos/id/105/400/200",
+      "https://picsum.photos/id/106/400/200",
+      "https://picsum.photos/id/107/400/200",
+      "https://picsum.photos/id/108/400/200",
+      "https://picsum.photos/id/109/400/200"
+    ];
+    let current = 0;
+    function showImage() {
+      document.getElementById("carousel-img").src = images[current];
+    }
+    function nextImage() {
+      current = (current + 1) % images.length;
+      showImage();
+    }
+    function prevImage() {
+      current = (current - 1 + images.length) % images.length;
+      showImage();
+    }
+
+    const questions = [
+      { question: "What is the capital of India?", options: ["Mumbai", "Delhi", "Kolkata", "Chennai"], answer: "Delhi" },
+      { question: "Which planet is known as the Red Planet?", options: ["Earth", "Venus", "Mars", "Jupiter"], answer: "Mars" },
+      { question: "What does CSS stand for?", options: ["Computer Style Sheet", "Cascading Style Sheet", "Creative Style System", "None"], answer: "Cascading Style Sheet" },
+      { question: "What is 2 + 2?", options: ["3", "4", "5", "6"], answer: "4" },
+      { question: "Which language is primarily used for web development?", options: ["Python", "Java", "JavaScript", "C#"], answer: "JavaScript" },
+      { question: "What is the largest ocean on Earth?", options: ["Atlantic", "Indian", "Arctic", "Pacific"], answer: "Pacific" },
+      { question: "Which continent is Australia part of?", options: ["Asia", "Africa", "Oceania", "Europe"], answer: "Oceania" },
+      { question: "What is the fastest animal on land?", options: ["Cheetah", "Lion", "Elephant", "Horse"], answer: "Cheetah" },
+      { question: "Which country is famous for its pyramids?", options: ["Mexico", "Egypt", "Greece", "Italy"], answer: "Egypt" },
+      { question: "Who wrote 'Romeo and Juliet'?", options: ["Shakespeare", "Dickens", "Hemingway", "Austen"], answer: "Shakespeare" },
+      { question: "What is the tallest mountain in the world?", options: ["K2", "Mount Kilimanjaro", "Mount Everest", "Mount Fuji"], answer: "Mount Everest" },
+      { question: "Which fruit is known as the king of fruits?", options: ["Apple", "Banana", "Mango", "Durian"], answer: "Durian" },
+      { question: "Which is the longest river in the world?", options: ["Amazon", "Nile", "Ganges", "Yangtze"], answer: "Amazon" },
+      { question: "What does HTML stand for?", options: ["HyperText Markup Language", "HighText Machine Language", "HyperTabular Markup Language", "None of these"], answer: "HyperText Markup Language" },
+      { question: "Who is known as the father of the computer?", options: ["Charles Babbage", "Alan Turing", "Bill Gates", "Steve Jobs"], answer: "Charles Babbage" }
+    ];
+
+    let usedQuestions = [];
+    let score = 0;
+    let quizRunning = false;
+
+    function getRandomQuestion() {
+      if (usedQuestions.length === questions.length) return null;
+      let q;
+      do {
+        q = questions[Math.floor(Math.random() * questions.length)];
+      } while (usedQuestions.includes(q));
+      usedQuestions.push(q);
+      return q;
+    }
+
+    function loadQuestion() {
+      const q = getRandomQuestion();
+      if (!q) {
+        document.getElementById("quiz-question").textContent = "🎉 Quiz completed!";
+        document.getElementById("quiz-options").innerHTML = "";
+        quizRunning = false;
+        return;
+      }
+
+      document.getElementById("quiz-question").textContent = q.question;
+      const optionsDiv = document.getElementById("quiz-options");
+      optionsDiv.innerHTML = "";
+
+      q.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.textContent = option;
+        btn.onclick = () => checkAnswer(option, q.answer);
+        optionsDiv.appendChild(btn);
+      });
+
+      document.getElementById("quiz-feedback").textContent = "";
+    }
+
+    function checkAnswer(selected, correct) {
+      const feedback = document.getElementById("quiz-feedback");
+      if (selected === correct) {
+        feedback.textContent = "✅ Correct!";
+        score++;
+      } else {
+        feedback.textContent = "❌ Wrong! Correct: " + correct;
+      }
+      document.getElementById("quiz-score").textContent = "Score: " + score;
+      setTimeout(() => {
+        if (quizRunning) loadQuestion();
+      }, 1000);
+    }
+
+    function startQuiz() {
+      if (quizRunning) return;
+      quizRunning = true;
+      usedQuestions = [];
+      score = 0;
+      document.getElementById("quiz-score").textContent = "Score: 0";
+      loadQuestion();
+    }
+
+    function stopQuiz() {
+      quizRunning = false;
+      document.getElementById("quiz-feedback").textContent = "⏸ Quiz stopped.";
+    }
+
+    function restartQuiz() {
+      quizRunning = false;
+      usedQuestions = [];
+      score = 0;
+      document.getElementById("quiz-question").textContent = "Click 'Start Quiz' to begin.";
+      document.getElementById("quiz-options").innerHTML = "";
+      document.getElementById("quiz-feedback").textContent = "";
+      document.getElementById("quiz-score").textContent = "Score: 0";
+    }
+
+    function getJoke() {
+      fetch("https://official-joke-api.appspot.com/jokes/random")
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById("joke-output").textContent = `${data.setup} - ${data.punchline}`;
+        })
+        .catch(err => console.error("Error fetching joke:", err));
+    }
+  </script>
+</body>
+</html>
